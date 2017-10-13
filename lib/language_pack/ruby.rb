@@ -512,7 +512,7 @@ WARNING
       log("bundle") do
         bundle_without = env("BUNDLE_WITHOUT") || "development:test"
         bundle_bin     = "bundle"
-        bundle_command = "#{bundle_bin} install --without #{bundle_without} --path vendor/bundle --binstubs #{bundler_binstubs_path}"
+        bundle_command = "#{bundle_bin} install --without #{bundle_without} --path #{ENV['BUNDLE_PATH'] || 'vendor/bundle'} --binstubs #{bundler_binstubs_path}"
         bundle_command << " -j4"
 
         if bundler.windows_gemfile_lock?
@@ -579,6 +579,10 @@ WARNING
             end
           end
           @bundler_cache.store
+
+          unless File.exist?("vendor/bundle")
+            FileUtils.ln_s(ENV["BUNDLE_PATH"], "vendor/bundle")
+          end
 
           # Keep gem cache out of the slug
           FileUtils.rm_rf("#{slug_vendor_base}/cache")
