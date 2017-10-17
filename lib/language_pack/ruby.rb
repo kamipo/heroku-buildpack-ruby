@@ -581,6 +581,7 @@ WARNING
           @bundler_cache.store
 
           unless File.exist?("vendor/bundle")
+            FileUtils.mkdir_p("vendor")
             FileUtils.ln_s(ENV["BUNDLE_PATH"], "vendor/bundle")
           end
 
